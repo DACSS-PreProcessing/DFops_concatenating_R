@@ -108,33 +108,61 @@ Then,
 names(allFragility)=c(names(allFragility)[1:4],newNames)
 str(allFragility)
 ```
-Let´s check some possible errors:
-```{r}
+Let's check some possible errors knowing the origin was an excel file:
+
+- The year:
+```{r, eval=FALSE}
 table(allFragility$Year)
 ```
 
-Verifying:
-```{r}
+The numeric format tells us the representation of a date:
+
+```{r, eval=FALSE}
+as.Date(38718, origin="1899-12-30")
+```
+
+This looks like an easy fix, just verify we have integers:
+
+```{r, eval=FALSE}
 str(allFragility$Year)
 ```
 
-
-```{r}
+Then,
+```{r, eval=FALSE}
 allFragility$Year=as.numeric(allFragility$Year)
-allFragility$Year2=format(as.Date(allFragility$Year, origin="1899-12-30"),"%Y")
+```
 
-allFragility$Year=ifelse(allFragility$Year%in%c(2021,2023),allFragility$Year,allFragility$Year2)
+We have two years well written, then:
+
+```{r, eval=FALSE}
+# temproral Column:
+allFragility$Year2=format(as.Date(allFragility$Year,
+                                  origin="1899-12-30"),
+                          "%Y") # I will just recover the year.
+
+# improved column
+allFragility$Year=ifelse(allFragility$Year%in%c(2021,2023),
+                         allFragility$Year,
+                         allFragility$Year2)
+
+# deleting temporal
 allFragility$Year2=NULL
 ```
-```{r}
+
+- The numeric columns as numeric:
+
+```{r, eval=FALSE}
 allFragility[,4:16]=lapply(allFragility[4:16],as.numeric)
 ```
-```{r}
+
+Verifying:
+
+```{r, eval=FALSE}
 str(allFragility)
 ```
 
 
-You can save this now.
+We can save this now.
 
 
 

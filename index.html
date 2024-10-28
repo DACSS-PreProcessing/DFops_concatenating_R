@@ -376,7 +376,7 @@ allLinks=html_nodes(webpage,&quot;table&quot;) %&gt;%
 allLinks</code></pre>
 <p>Now, I will create a list of data frames by loading the data from
 those links:</p>
-<pre class="r"><code>dfs = lapply(allLinks, rio::import)</code></pre>
+<pre class="r"><code>dfs = lapply(allLinks, rio::import,col_types = &quot;text&quot;)</code></pre>
 <p>Can we concatenate the files now?</p>
 <pre class="r"><code>do.call(rbind, dfs)</code></pre>
 <p>It is not possible due to the column names differences in each
@@ -389,7 +389,7 @@ for (df in dfs){
     allNames[[i]]=names(df)
     i=i+1
 }</code></pre>
-<p>Let me finf WHAT is common in all DFs:</p>
+<p>Let me find WHAT is common in all DFs:</p>
 <pre class="r"><code>Reduce(intersect, allNames)</code></pre>
 <p>If this is the union of all the column names:</p>
 <pre class="r"><code>Reduce(union, allNames)</code></pre>
@@ -416,7 +416,38 @@ newNames=sort(gsub(&quot;:\\s|\\s&quot;,&quot;_&quot;,grep(&#39;:&#39;,names(all
 <p>Then,</p>
 <pre class="r"><code>names(allFragility)=c(names(allFragility)[1:4],newNames)
 str(allFragility)</code></pre>
-<p>You can save this now.</p>
+<p>Let’s check some possible errors knowing the origin was an excel
+file:</p>
+<ul>
+<li>The year:</li>
+</ul>
+<pre class="r"><code>table(allFragility$Year)</code></pre>
+<p>The numeric format tells us the representation of a date:</p>
+<pre class="r"><code>as.Date(38718, origin=&quot;1899-12-30&quot;)</code></pre>
+<p>This looks like an easy fix, just verify we have integers:</p>
+<pre class="r"><code>str(allFragility$Year)</code></pre>
+<p>Then,</p>
+<pre class="r"><code>allFragility$Year=as.numeric(allFragility$Year)</code></pre>
+<p>We have two years well written, then:</p>
+<pre class="r"><code># temproral Column:
+allFragility$Year2=format(as.Date(allFragility$Year,
+                                  origin=&quot;1899-12-30&quot;),
+                          &quot;%Y&quot;) # I will just recover the year.
+
+# improved column
+allFragility$Year=ifelse(allFragility$Year%in%c(2021,2023),
+                         allFragility$Year,
+                         allFragility$Year2)
+
+# deleting temporal
+allFragility$Year2=NULL</code></pre>
+<ul>
+<li>The numeric columns as numeric:</li>
+</ul>
+<pre class="r"><code>allFragility[,4:16]=lapply(allFragility[4:16],as.numeric)</code></pre>
+<p>Verifying:</p>
+<pre class="r"><code>str(allFragility)</code></pre>
+<p>We can save this now.</p>
 </div>
 
 
