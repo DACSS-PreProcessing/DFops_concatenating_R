@@ -47,7 +47,7 @@ for (df in dfs){
 }
 ```
 
-Let me finf WHAT is common in all DFs:
+Let me find WHAT is common in all DFs:
 
 
 ```{r, eval=FALSE}
@@ -108,8 +108,29 @@ Then,
 names(allFragility)=c(names(allFragility)[1:4],newNames)
 str(allFragility)
 ```
+Let´s check some possible errors:
 ```{r}
 table(allFragility$Year)
+```
+
+Verifying:
+```{r}
+str(allFragility$Year)
+```
+
+
+```{r}
+allFragility$Year=as.numeric(allFragility$Year)
+allFragility$Year2=format(as.Date(allFragility$Year, origin="1899-12-30"),"%Y")
+
+allFragility$Year=ifelse(allFragility$Year%in%c(2021,2023),allFragility$Year,allFragility$Year2)
+allFragility$Year2=NULL
+```
+```{r}
+allFragility[,4:16]=lapply(allFragility[4:16],as.numeric)
+```
+```{r}
+str(allFragility)
 ```
 
 
