@@ -25,7 +25,7 @@ Now, I will create a list of data frames by loading the data from those links:
 
 
 ```{r, eval=FALSE}
-dfs = lapply(allLinks, rio::import)
+dfs = lapply(allLinks, rio::import,col_types = "text")
 ```
 
 Can we concatenate the files now?
@@ -107,6 +107,9 @@ Then,
 ```{r, eval=FALSE}
 names(allFragility)=c(names(allFragility)[1:4],newNames)
 str(allFragility)
+```
+```{r}
+table(allFragility$Year)
 ```
 
 
