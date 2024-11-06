@@ -100,11 +100,8 @@ gsub(":\\s|\\s","_",grep(':',names(allFragility),value = T))%>%tolower()
 ```{r, eval=FALSE}
 # sorted new names
 newNames=sort(gsub(":\\s|\\s","_",grep(':',names(allFragility),value = T))%>%tolower())
-```
 
-Then,
-
-```{r, eval=FALSE}
+# then
 names(allFragility)=c(names(allFragility)[1:4],newNames)
 str(allFragility)
 ```
@@ -163,6 +160,10 @@ str(allFragility)
 
 
 We can save this now.
+
+```{r, eval=FALSE}
+write.csv(allFragility,'allFragility.csv',row.names = F)
+```
 
 
 

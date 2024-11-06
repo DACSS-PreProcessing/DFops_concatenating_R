@@ -412,9 +412,10 @@ grep(&#39;:&#39;,names(allFragility),value = T)</code></pre>
 <pre class="r"><code># no spaces and to lowercase
 gsub(&quot;:\\s|\\s&quot;,&quot;_&quot;,grep(&#39;:&#39;,names(allFragility),value = T))%&gt;%tolower()</code></pre>
 <pre class="r"><code># sorted new names
-newNames=sort(gsub(&quot;:\\s|\\s&quot;,&quot;_&quot;,grep(&#39;:&#39;,names(allFragility),value = T))%&gt;%tolower())</code></pre>
-<p>Then,</p>
-<pre class="r"><code>names(allFragility)=c(names(allFragility)[1:4],newNames)
+newNames=sort(gsub(&quot;:\\s|\\s&quot;,&quot;_&quot;,grep(&#39;:&#39;,names(allFragility),value = T))%&gt;%tolower())
+
+# then
+names(allFragility)=c(names(allFragility)[1:4],newNames)
 str(allFragility)</code></pre>
 <p>Let’s check some possible errors knowing the origin was an excel
 file:</p>
@@ -448,6 +449,7 @@ allFragility$Year2=NULL</code></pre>
 <p>Verifying:</p>
 <pre class="r"><code>str(allFragility)</code></pre>
 <p>We can save this now.</p>
+<pre class="r"><code>write.csv(allFragility,&#39;allFragility.csv&#39;,row.names = F)</code></pre>
 </div>
 
 
